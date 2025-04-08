@@ -1,1 +1,67 @@
+name: Update Channel m3u8 Files
 
+on:
+  schedule:
+    - cron: "0 * * * *"  # Runs every hour
+  workflow_dispatch:
+
+jobs:
+  update-m3u8:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.x"
+
+      - name: Install dependencies
+        run: pip install requests PyGithub
+
+      - name: Update m3u8 Files
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          python -c '
+          import requests
+          from github import Github
+
+          channels = {
+              "FR2LQ.m3u8": "https://raw.githubusercontent.com/Paradise-91/ParaTV/main/streams/francetv/france2.m3u8",
+              "FR3LQ.m3u8": "https://raw.githubusercontent.com/Paradise-91/ParaTV/main/streams/francetv/france3.m3u8",
+              "FR5LQ.m3u8": "https://raw.githubusercontent.com/Paradise-91/ParaTV/main/streams/francetv/france5.m3u8",
+              "LCI_LQ.m3u8": "https://raw.githubusercontent.com/ipstreet312/freeiptv/master/ressources/btv/py/lci1.m3u8"
+          }
+
+          resolutions_to_remove = ["1920x1080", "1280x720", "960x540"]
+
+          g = Github("${{ env.GITHUB_TOKEN }}")
+          repo = g.get_repo("nongolola/NTJ_LQ_TV")
+
+          for file, url in channels.items():
+              master = requests.get(url).text
+              lines = master.splitlines()
+              trimmed_lines = []
+              skip_next = False
+              for line in lines:
+                  if skip_next:
+                      skip_next = False
+                      continue
+                  if any(res in line for res in resolutions_to_remove) and "EXT-X-STREAM-INF" in line:
+                      skip_next = True  # Skip this line and the next (URL)
+                  else:
+                      trimmed_lines.append(line)
+              trimmed = "\n".join(trimmed_lines)
+              file_content = repo.get_contents(file)
+              repo.update_file(file, f"Update {file}", trimmed, file_content.sha)
+          '
+
+      - name: Commit changes
+        run: |
+          git config --global user.name "GitHub Action"
+          git config --global user.email "action@github.com"
+          git add *.m3u8
+          git commit -m "Updated m3u8 files" || echo "No changes to commit"
+          git push
