@@ -2,7 +2,7 @@ name: Update Channel m3u8 Files
 
 on:
   schedule:
-    - cron: "*/3 * * * *"  # Runs every hour
+    - cron: "0 * * * *"  # Runs every hour
   workflow_dispatch:
 
 jobs:
