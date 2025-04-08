@@ -1,4 +1,4 @@
-name: updateIPTVupdate
+name: Update IPTV Channels
 
 on:
   schedule:
