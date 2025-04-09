@@ -1,6 +1,6 @@
 FR2LQ.m3u8: https://raw.githubusercontent.com/Paradise-91/ParaTV/main/streams/francetv/france2.m3u8
 FR3LQ.m3u8: https://raw.githubusercontent.com/Paradise-91/ParaTV/main/streams/francetv/france3.m3u8
 FR5LQ.m3u8: https://raw.githubusercontent.com/Paradise-91/ParaTV/main/streams/francetv/france5.m3u8
-LCI_LQ.m3u8: https://github.com/Paradise-91/ParaTV/blob/main/streams/tf1plus/lci.m3u8
+LCI_LQ.m3u8: https://raw.githubusercontent.com/ipstreet312/freeiptv/master/ressources/btv/py/lci1.m3u8
 BloombergTV_LQ.m3u8: https://www.bloomberg.com/media-manifest/streams/eu.m3u8
 GBNews_LQ.m3u8: https://jmp2.uk/sam-GBBB1600008R3.m3u8
